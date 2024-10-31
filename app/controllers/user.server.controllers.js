@@ -1,8 +1,21 @@
 const require = require("express");
-const Joi = require("joi") 
+const Joi = require("joi");
+const app = require("express");
  
 
 const create_account_validation = Joi.object({
+    first_name: Joi.string()
+        .alphanum()
+        .min(4)
+        .max(30)
+        .required(),
+
+    last_name: Joi.string()
+        .alphanum()
+        .min(4)
+        .max(30)
+        .required(),
+
     username: Joi.string()
         .alphanum()
         .min(3)
@@ -71,7 +84,7 @@ const logout = (req, res) => {
 }
 
 module.exports = {
-    create_account: create_account,
-    login: login,
-    logout: logout
+    create_account,
+    login,
+    logout
 }

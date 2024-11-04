@@ -1,5 +1,5 @@
 // The routes top art of endpoint
-const users = require("../controllers/user.server.controllers.js")
+const users = require("../controllers/users.js")
 
 
 module.exports = function(app){

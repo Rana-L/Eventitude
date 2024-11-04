@@ -1,4 +1,4 @@
-const require = require("express");
+const express = require("express");
 const Joi = require("joi");
 const app = require("express");
  
@@ -38,15 +38,15 @@ const logout_validation = Joi.object({
 const create_account = (req, res) => {
     const { error } = create_account_validation.validate(req.body);
     if (error) {
-        return res.status(400).send(error.details[0].message);
+        return res.status(400).json.send(error.details[0].message);
     } else {
 
         const accountCreated = true; // this is boolean value to placehold the account creation status
 
         if(accountCreated){
-            return res.sendStatus(201).send("Account created successfully");
+            return res.sendStatus(201).json.send({message: "Account created successfully"});
         }   else {
-            return res.sendStatus(500).send("Server error: Account not created");
+            return res.sendStatus(500).json.send({error: "Server error: Account not created"});
         }
     }
 };

@@ -2,7 +2,7 @@ const express = require('express');
 const morgan  = require('morgan');
 const bodyParser = require('body-parser');
 const cors = require('cors');
-const usersRoute = require("./app/routes/users.server.routes.js");
+const usersRoute = require("./app/routes/users.js");
 
 const app = express();
 app.use(cors());

@@ -192,4 +192,4 @@ module.exports = {
     event_attend,
     event_delete,
     event_search
-}
+};

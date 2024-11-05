@@ -18,5 +18,5 @@ module.exports = function(app){
         .delete(isAuthenticated, event.event_delete);
     
     app.route("/search")
-        .get(event.event_search);   
+        .get(isAuthenticated, event.event_search);   
 }

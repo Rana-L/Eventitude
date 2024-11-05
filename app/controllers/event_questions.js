@@ -139,4 +139,4 @@ module.exports = {
     questions_question_id_delete,
     questions_question_id_vote,
     questions_question_vote_delete
-}
+};

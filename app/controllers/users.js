@@ -89,4 +89,4 @@ module.exports = {
     create_account,
     login,
     logout
-}
+};

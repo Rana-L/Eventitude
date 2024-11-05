@@ -1,16 +1,16 @@
-
+const {isAuthenticated} = require("../libs/middleware.js");
 const eventQuestions = require("../controllers/event_questions.js")
 
 module.exports = function(app){
     app.route("/events/:event_id/questions")
-        .post(eventQuestions);
+        .post(isAuthenticated, eventQuestions);
 
     app.route("/questions/:question_id")
-        .delete(eventQuestions);
+        .delete(isAuthenticated, eventQuestions);
 
     app.route("/questions/:question_id/vote")
-        .post(eventQuestions);
+        .post(isAuthenticated, eventQuestions);
 
     app.route("/questions/:question_id/vote")
-        .delete(eventQuestions);
+        .delete(isAuthenticated, eventQuestions);
 }

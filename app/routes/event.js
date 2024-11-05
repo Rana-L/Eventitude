@@ -12,7 +12,7 @@ module.exports = function(app){
         .patch(isAuthenticated, event.event_update);
 
     app.route("events/:event_id/attendees/:attendee_id")
-        .post(isAuthenticated, event.event_attendee);
+        .post(isAuthenticated, event.event_attend);
     
     app.route("events/:event_id")
         .delete(isAuthenticated, event.event_delete);

@@ -1,4 +1,4 @@
-const {isAuthenticated} = require("../libs/middleware.js");
+const { isAuthenticated } = require("../libs/middleware.js");
 const event = require("../controllers/event.js")
 
 module.exports = function(app){

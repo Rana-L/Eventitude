@@ -38,15 +38,15 @@ const logout_validation = Joi.object({
 const create_account = (req, res) => {
     const { error } = create_account_validation.validate(req.body);
     if (error) {
-        return res.status(400).json.send(error.details[0].message);
+        return res.status(400).send(error.details[0].message);
     } else {
 
         const accountCreated = true; // this is boolean value to placehold the account creation status
 
         if(accountCreated){
-            return res.sendStatus(201).json.send({message: "Account created successfully"});
+            return res.sendStatus(201).send({message: "Account created successfully", user_id: req.body.email});
         }   else {
-            return res.sendStatus(500).json.send({error: "Server error: Account not created"});
+            return res.sendStatus(500).send({error: "Server error: Account not created"});
         }
     }
 };

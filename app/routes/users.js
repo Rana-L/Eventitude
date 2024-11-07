@@ -1,5 +1,5 @@
 // The routes top art of endpoint
-const {isAuthenticated} = require("../libs/middleware.js");
+const { isAuthenticated } = require("../libs/middleware.js");
 const users = require("../controllers/users.js")
 
 

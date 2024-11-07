@@ -1,6 +1,4 @@
 
-const sql = 'SELECT user_id FROM users WHERE session_token = ?';
-const params = [token];
 
 const isAuthenticated = function(req, res, next) {
     let token = req.get('X-Authorization');
@@ -13,6 +11,4 @@ const isAuthenticated = function(req, res, next) {
     });
 };
 
-export {isAuthenticated};
-
-
+module.exports = { isAuthenticated };

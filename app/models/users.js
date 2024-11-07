@@ -1,3 +1,5 @@
+const crypto = require('crypto');
+const db = require('../../database.js');
 
 
 // create an account
@@ -14,10 +16,10 @@ const addNewUser = (user, done) => {
     }
     return done(null, this.lastID);
   });
+}
 
-  const getHash = function(password, salt){
-    return crypto.pbkdf2Sync(password, salt, 10000, 256, 'sha256').toString('hex');
-  }
+const getHash = function(password, salt){
+  return crypto.pbkdf2Sync(password, salt, 10000, 256, 'sha256').toString('hex');
 }
 
 // Logging in
@@ -58,9 +60,9 @@ users.authenticateUser(req.body.email, req.body.password, (err, id) => {
     })
   })
 
+  // setting token
 const setToken = (id, done) => {
   let token = crypto.randomBytes(16).toString('hex');
-
   const sql = 'UPDATE users SET session_token=? WHERE user_id=?';
 
   db.run(sql, [token, id], (err) => {
@@ -76,3 +78,8 @@ const removeToken = (token, done) => {
     return done(err);
   })
 }
+
+
+module.exports = users = { addNewUser, authenticateUser, setToken, removeToken };
+
+

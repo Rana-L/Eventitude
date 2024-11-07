@@ -1,6 +1,8 @@
 const express = require("express");
 const Joi = require("joi");
 const app = require("express");
+const users = require("../models/users.js");
+
  
 
 const create_account_validation = Joi.object({
@@ -8,8 +10,7 @@ const create_account_validation = Joi.object({
     last_name: Joi.string().alphanum().min(4).max(30).required(),
     email: Joi.string().email({ minDomainSegments: 2, tlds: { allow: ["com", "net"] } }).required(),
     password: Joi.string().pattern(new RegExp("^[a-zA-Z0-9]{3,30}$")).required(),
-
-    repeat_password: Joi.ref("password"),
+    repeat_password: Joi.valid(Joi.ref("password")).required(),
 
     access_token: [
         Joi.string(),
@@ -20,8 +21,6 @@ const create_account_validation = Joi.object({
 const login_validation = Joi.object({
     email: Joi.string().email({ minDomainSegments: 2, tlds: { allow: ["com", "net"] } }).required(),
     password: Joi.string().pattern(new RegExp("^[a-zA-Z0-9]{3,30}$")).required(),
-   
-    repeat_password: Joi.ref("password"),
 
     access_token: [
         Joi.string(),
@@ -38,13 +37,15 @@ const logout_validation = Joi.object({
 const create_account = (req, res) => {
     const { error } = create_account_validation.validate(req.body);
     if (error) {
-        return res.status(400).send(error.details[0].message);
+        return res.status(400).send({ error: error.details[0].message });
     } else {
-
+        
+        const user_id = req.body.email;
+        const email = req.body.email;
         const accountCreated = true; // this is boolean value to placehold the account creation status
 
         if(accountCreated){
-            return res.sendStatus(201).send({message: "Account created successfully", user_id: req.body.email});
+            return res.sendStatus(201).send({message: "Account created successfully", user: user_id, email: email});
         }   else {
             return res.sendStatus(500).send({error: "Server error: Account not created"});
         }

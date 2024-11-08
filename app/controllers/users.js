@@ -3,88 +3,93 @@ const Joi = require("joi");
 const app = require("express");
 const users = require("../models/users.js");
 
- 
-
 const create_account_validation = Joi.object({
     first_name: Joi.string().alphanum().min(4).max(30).required(),
     last_name: Joi.string().alphanum().min(4).max(30).required(),
     email: Joi.string().email({ minDomainSegments: 2, tlds: { allow: ["com", "net"] } }).required(),
     password: Joi.string().pattern(new RegExp("^[a-zA-Z0-9]{3,30}$")).required(),
     repeat_password: Joi.valid(Joi.ref("password")).required(),
-
-    access_token: [
-        Joi.string(),
-        Joi.number()
-    ]
+    access_token: [ Joi.string(), Joi.number()]
 })
+
+const create_account = (req, res) => {
+    const { error } = create_account_validation.validate(req.body);
+    if (error) {
+        return res.status(400).json({ error: error.details[0].message });
+    }
+    
+    users.NewUser(req.body, (err, user_id) => {
+        if (err) {
+            return res.status(400).json({ error_message: "Invalid user creation" });
+        } 
+        
+        if (user_id) {
+            return res.status(201).json({ message: "Account created successfully" });
+        } else {
+            return res.status(500).json({ error_message: "Error  Account not created" });
+        }
+    });
+};
+
 
 const login_validation = Joi.object({
     email: Joi.string().email({ minDomainSegments: 2, tlds: { allow: ["com", "net"] } }).required(),
     password: Joi.string().pattern(new RegExp("^[a-zA-Z0-9]{3,30}$")).required(),
-
-    access_token: [
-        Joi.string(),
-        Joi.number()
-    ]
-})
-
-const logout_validation = Joi.object({
+    access_token:[Joi.string(), Joi.number()]
+});
     
-})
- 
-
- // controller main body
-const create_account = (req, res) => {
-    const { error } = create_account_validation.validate(req.body);
-    if (error) {
-        return res.status(400).send({ error: error.details[0].message });
-    } else {
-        
-        const user_id = req.body.email;
-        const email = req.body.email;
-        const accountCreated = true; // this is boolean value to placehold the account creation status
-
-        if(accountCreated){
-            return res.sendStatus(201).send({message: "Account created successfully", user: user_id, email: email});
-        }   else {
-            return res.sendStatus(500).send({error: "Server error: Account not created"});
-        }
-    }
-};
-
 
 const login = (req, res) => {
     const { error } = login_validation.validate(req.body);
     if (error) {
-        return res.status(400).send(error.details[0].message);
-    } else {
-
-        const accountLogin = true; // this is boolean value to placehold the account login status
-
-        if(accountLogin){
-            return res.sendStatus(201).send("Account login successfully");
-        }   else {
-            return res.sendStatus(500).send("Server error: Account not login");
-        }
+        return res.status(400).json({ error_message: error.details[0].message });
     }
+
+    users.authenticateUser(req.body.email, req.body.password, (err, id) => {
+        if(err === 404) 
+            return res.status(400).send({ error_message: "Invalid email or password entered"});
+        if (err) {
+            return res.sendStatus(500).send({ error_message: "Error during authentication" });
+        }
+            users.getToken(id, (err, token) => {
+                if (err) {
+                    return res.sendStatus(500).send({ error_message: "Error while getting token" });
+                }
+                
+                if(token){
+                    return res.status(200).json({user_id: id, session_token: token})
+                }else{
+                    users.setToken(id, (err, NewToken) => {
+                        if (err) {
+                            return res.sendStatus(500).send({ error_message: "Error while setting token" });
+                        }
+                    return res.status(200).send({user_id: id, session_token: NewToken});
+                });
+            }
+        });
+    });
 };
+   
+const logout_validation = Joi.object({
+    user_id: Joi.number().required(), 
+});
+ 
 
 const logout = (req, res) => {
     const { error } = logout_validation.validate(req.body);
     if (error) {
-        return res.status(400).send(error.details[0].message);
-    } else {
-
-        const accountLogout = true; // this is boolean value to placehold the account login status
-
-        if(accountLogout){
-            return res.sendStatus(201).send("Account logout successfully");
-        }   else {
-            return res.sendStatus(500).send("Server error: Account not logout");
-        }
+        return res.status(400).json({ error_message: error.details[0].message});
     }
-};
 
+    const token = req.get("X-Authorization");
+
+    users.removeToken(token, (err) => {
+        if (err) {
+            return res.status(500).json({ error_message: "Error logging out" });
+        }
+        return res.status(200).json({ message: "Logout successful" });
+    });
+};
 
 module.exports = {
     create_account,

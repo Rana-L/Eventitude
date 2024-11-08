@@ -3,7 +3,7 @@ const db = require('../../database.js');
 
 
 // create an account
-const addNewUser = (user, done) => {
+const NewUser = (user, done) => {
   const salt = crypto.randomBytes(64);
   const hash = getHash(user.password, salt);
 
@@ -42,23 +42,7 @@ const authenticateUser = (email, password, done) => {
   })
 }
 
-users.authenticateUser(req.body.email, req.body.password, (err, id) => {
-  if(err === 404) return res.status(400).send("Invalid email/password supplied")
-  if (err) return res.sendStatus(500)
-    
-    users.getToken(id, (err, token) => {
-      if (err) return res.sendStatus(500)
 
-      if(token){
-        return res.status(200).send({user_id: id, session_token: token})
-      }else{
-        users.setToken(id, (err, token) => {
-          if (err) return res.sendStatus(500)
-          return res.status(200).send({user_id: id, session_token: token})
-        })
-      }
-    })
-  })
 
   // setting token
 const setToken = (id, done) => {
@@ -80,6 +64,11 @@ const removeToken = (token, done) => {
 }
 
 
-module.exports = users = { addNewUser, authenticateUser, setToken, removeToken };
+module.exports = {
+  NewUser,
+  authenticateUser,
+  setToken,
+  removeToken}
+
 
 

@@ -35,7 +35,7 @@ const event_delete_validation = Joi.object({
 
 const event_search_validation = Joi.object({
     q: Joi.string().min(4).max(30).required(), 
-    status: Joi.string().keys("MY_EVENTS, ATTENDING, OPEN, ARCHIVE").required(),
+    status: Joi.string().valid("MY_EVENTS, ATTENDING, OPEN, ARCHIVE").required(),
     limit: Joi.number().integer().min(1).max(20).required(),
     offset: Joi.number().integer().min(0).required()
 })

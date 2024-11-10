@@ -29,7 +29,7 @@ const create_account = (req, res) => {
         } 
         
         if (user_id) {
-            return res.status(201).json({  message: "Account created successfully", user_id: user_id });
+            return res.status(201).json({  message: "Account created successfully", user_id: user_id , email: req.body.email });
         } else {
             return res.status(500).json({ error_message: "Error  Account not created" });
         }

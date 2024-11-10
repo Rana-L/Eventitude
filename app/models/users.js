@@ -6,9 +6,19 @@ const db = require('../../database.js');
 const NewUser = (user, done) => {
   const salt = crypto.randomBytes(64);
   const hash = getHash(user.password, salt);
-
+ 
+  const checkEmail = 'SELECT email FROM users WHERE email = ?';
   const sql = 'INSERT INTO users (first_name, last_name, email, password, salt) VALUES (?, ?, ?, ?, ?)';
   let values = [user.first_name, user.last_name, user.email, hash, salt.toString('hex')];
+
+  db.get(checkEmail, [user.email], (err, row) => {
+    if (err) {
+      return done(err);
+    }
+    if (row) {
+      return done (new Error('Email already exists'));
+    }
+  })
 
   db.run(sql, values, function(err) {
     if (err) {
@@ -16,7 +26,7 @@ const NewUser = (user, done) => {
     }
     return done(null, this.lastID);
   });
-}
+};
 
 const getHash = function(password, salt){
   return crypto.pbkdf2Sync(password, salt, 10000, 256, 'sha256').toString('hex');

@@ -78,7 +78,8 @@ module.exports = {
   NewUser,
   authenticateUser,
   setToken,
-  removeToken}
+  removeToken,
+}
 
 
 

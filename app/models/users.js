@@ -79,6 +79,7 @@ module.exports = {
   authenticateUser,
   setToken,
   removeToken,
+  getHash,
 }
 
 

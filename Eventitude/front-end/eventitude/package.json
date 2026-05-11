@@ -1,0 +1,29 @@
+{
+  "name": "eventitude",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "build:css": "postcss src/assets/tailwind.css -o dist/tailwind.css"
+  },
+  "dependencies": {
+    "@mdi/font": "^7.4.47",
+    "css": "^3.0.0",
+    "tailwind": "^4.0.0",
+    "vue": "^3.5.13",
+    "vue-router": "^4.5.0",
+    "vuetify": "^3.7.6"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-vue": "^5.2.1",
+    "autoprefixer": "^10.4.20",
+    "postcss": "^8.4.49",
+    "postcss-cli": "^9.1.0",
+    "tailwindcss": "^3.2.7",
+    "vite": "^6.0.1",
+    "vite-plugin-vue-devtools": "^7.6.5"
+  }
+}

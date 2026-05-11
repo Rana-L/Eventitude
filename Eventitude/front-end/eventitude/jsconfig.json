@@ -1,0 +1,9 @@
+// jsconfig.json file for configuring JavaScript in the project
+{
+  "compilerOptions": {
+    "paths": {
+      "@/*": ["./src/*"]
+    }
+  },
+  "exclude": ["node_modules", "dist"]
+}
